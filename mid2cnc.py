@@ -1,7 +1,7 @@
 # mid2cnc.py, a MIDI to CNC g-code converter
 # by T. R. Gipson <drmn4ea at google mail>
 # http://tim.cexx.org/?p=633
-# Hacked by Miles Lightwood of TeamTeamUSA to support the MakerBot 1motor CNC - m@teamteamusa.com
+# Hacked by Miles Lightwood of TeamTeamUSA to support the MakerBot cupcake CNC - m@teamteamusa.com
 # Fixed by Andrea Cavalli. Added new parameters, fixed multi-axis support and added extruder support - nospam@warp.ovh
 # Released under the GNU General Public License
 
@@ -9,17 +9,17 @@
 # http://seandon4.tripod.com/
 # This module is public domain.
 
-# Usage with "4axis" printer_mode (default):
+# Usage with "4axes" printer_mode (default):
 # python ./mid2cnc.py midifile gcodefile machine_ppi_x machine_ppi_y machine_ppi_z machine_ppi_e tone_multiplier tempo_multiplier tune_motors_mode
 # Example:
 # python ./mid2cnc.py music.mid output.gcode 100 100 800 100 1.0 1.0 no
 
-# Usage with "1motor" printer_mode:
+# Usage with "Zaxis" printer_mode:
 # python ./mid2cnc.py midifile gcodefile machine_ppi tone_multiplier tempo_multiplier
 # Example:
-# python ./mid2cnc.py music.mid output.gcode 100 1.0 1.0 no
+# python ./mid2cnc.py music.mid output.gcode 800 1.0 1.0 no
 
-# Usage with "3axis" printer_mode:
+# Usage with "3axes" printer_mode:
 # python ./mid2cnc.py midifile gcodefile machine_ppi_x machine_ppi_y machine_ppi_z tone_multiplier tempo_multiplier tune_motors_mode
 # Example:
 # python ./mid2cnc.py music.mid output.gcode 100 100 800 1.0 1.0 no
@@ -32,7 +32,7 @@ import math
 imported_channels=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]  # List of MIDI channels (instruments) to import.
 														# Channel 10 is percussion, so you probably want to omit it.
 
-printer_mode = '4axis' # if set to '1motor' you can ignore the rest of the variables, if set to '4axis' the printer will use also the extruder
+printer_mode = 'Zaxis' # if set to 'Zaxis' you can ignore the rest of the variables, if set to '4axes' the printer will use also the extruder
 
 machine_ppi = [2000, 2000, 2000, 2000]  # Set equal to your machine's Steps Per Inch (steps per rotation * threads per inch)
 
@@ -66,17 +66,17 @@ def main(argv):
 	z_dir=1.0;
 	e_dir=1.0;
 	
-	if printer_mode == '1motor':
+	if printer_mode == 'Zaxis':
 		tone_multiplier = float(argv[4])
-		num_axes = 1 # for 1motors it should be 1; all others should be 3
-		machine_ppi = [float(argv[3])/tone_multiplier]  # Higher numbers make the pitch lower and the song slower; 600 is a good starting place for 1motors
+		num_axes = 1 # for Zaxiss it should be 1; all others should be 3
+		machine_ppi = [float(argv[3])/tone_multiplier]  # Higher numbers make the pitch lower and the song slower; 600 is a good starting place for Zaxiss
 		machine_limit_x = 3.93 # 
 		machine_limit_y = 3.93 # 
 		machine_limit_z = 1 # 
 		machine_limit_e = 3.93 # 
 		tempo_multiplier = float(argv[5])
 		test_motors = 'no';
-	elif printer_mode == '3axis':
+	elif printer_mode == '3axes':
 		tone_multiplier = float(argv[6])
 		num_axes = 3
 		machine_ppi = [float(argv[3])/tone_multiplier,float(argv[4])/tone_multiplier,float(argv[5])/tone_multiplier]  # Higher numbers make the pitch lower and the song slower
@@ -153,7 +153,7 @@ def main(argv):
 
 	if suppress_comments == 0:
 		FILE.write ("( File created with mid2cnc.py - http://tim.cexx.org/?p=633 )\n")
-		FILE.write ("( Hacked by Miles Lightwood of TeamTeamUSA to support the MakerBot 1motor CNC - m at teamteamusa dot com )\n")
+		FILE.write ("( Hacked by Miles Lightwood of TeamTeamUSA to support the MakerBot Zaxis CNC - m at teamteamusa dot com )\n")
 		FILE.write ("( Input file was " + midifile + " )\n")
 
 		FILE.write ("( Steps per inch: " + str(machine_ppi) + " )\n")	
@@ -168,7 +168,7 @@ def main(argv):
 	else:
 		FILE.write ("G20\n")			# Set units to Imperial
 
-	if printer_mode == '1motor':
+	if printer_mode == 'Zaxis':
 		FILE.write ("G90\n")			# Set movements relative
 	
 	FILE.write("G00 X0 Y0 Z0 E0 F2000\n")	# Home
@@ -258,7 +258,7 @@ def main(argv):
 					feed_sum += feed_xyz[i]**2;
 				combined_feedrate = math.sqrt(feed_sum)
 				
-				if printer_mode == '1motor': # flip x and z so that all movement is in z
+				if printer_mode == 'Zaxis': # flip x and z so that all movement is in z
 					FILE.write("G01 X%.10f Y%.10f Z%.10f E%.10f F%.10f\n" % (z, y, x, e, combined_feedrate))
 				else:
 					FILE.write("G01 X%.10f Y%.10f Z%.10f E%.10f F%.10f\n" % (x, y, z, e, combined_feedrate))
