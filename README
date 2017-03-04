@@ -1,6 +1,6 @@
 OVERVIEW
 ========
-This is a hacked version of Tim Gipson's awesome mid2cnc code to support 3D printers. The gcode file will voice the song in the Z axis only.
+This is a hacked version of Tim Gipson's awesome mid2cnc code to support 3D printers. You can choose over three different playing modes: 4axes, 3axes, Zaxis
 mid2cnc requies a MIDI file; Miles Lightwood has found that this workflow is effective on OS X 10.5.8, YMMV:
 
 1. Obtain the song you want as a PowerTab guitar tablature file. Search for .ptb or gp4 files using your favorite search engine
