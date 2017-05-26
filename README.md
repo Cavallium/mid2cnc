@@ -1,3 +1,8 @@
+WARNING
+=======
+THIS IS AN OUTDATED PROJECT, PLEASE TAKE A LOOK TO THE NEW [Midi23D](https://github.com/XDrake99/Midi23D)
+
+<br><br><br><br><br>
 OVERVIEW
 ========
 This is a hacked version of Tim Gipson's awesome mid2cnc code to support 3D printers. You can choose over three different playing modes: 4axes, 3axes, Zaxis
